@@ -1,41 +1,89 @@
 "use client";
 
 import { useState } from "react";
-import CareerSelector from "@/components/CareerSelector";
-import InterviewTypeSelector from "@/components/InterviewTypeSelector";
+
+import { Button } from "@/components/ui/button";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Home() {
   const [career, setCareer] = useState("");
   const [interviewType, setInterviewType] = useState("");
 
   return (
-    <main className="min-h-screen flex justify-center items-center bg-gradient-to-br from-slate-100 to-slate-200">
-      <div className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-xl">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2 text-center">
-          InterviewAI
-        </h1>
-        <p className="text-center text-gray-500 mb-8">
-          Practice interviews with AI-powered feedback
-        </p>
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 p-6">
+      <Card className="w-full max-w-3xl shadow-2xl border-0">
+        <CardHeader>
+          <CardTitle className="text-5xl font-bold text-center tracking-tight">
+            InterviewAI
+          </CardTitle>
 
-        <div className="space-y-4">
-          <CareerSelector
-            value={career}
-            onChange={setCareer}
-          />
+          <CardDescription className="text-center text-base">
+            Practice interviews with AI-powered feedback
+          </CardDescription>
+        </CardHeader>
 
-          <InterviewTypeSelector
-            value={interviewType}
-            onChange={setInterviewType}
-          />
+        <CardContent className="space-y-6">
+          <div>
+            <label className="mb-2 block font-medium">
+              Career Field
+            </label>
 
-          <button
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium p-3 rounded-lg transition"
+            <select
+              value={career}
+              onChange={(e) => setCareer(e.target.value)}
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select Career</option>
+              <option value="fullstack">Full Stack Developer</option>
+              <option value="frontend">Frontend Developer</option>
+              <option value="backend">Backend Developer</option>
+              <option value="aiml">AI/ML Engineer</option>
+              <option value="dataanalyst">Data Analyst</option>
+              <option value="cybersecurity">Cybersecurity</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block font-medium">
+              Interview Type
+            </label>
+
+            <select
+              value={interviewType}
+              onChange={(e) => setInterviewType(e.target.value)}
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select Type</option>
+              <option value="technical">Technical</option>
+              <option value="hr">HR</option>
+              <option value="behavioral">Behavioral</option>
+              <option value="mixed">Mixed</option>
+            </select>
+          </div>
+
+          <Button
+            size="lg"
+            className="w-full text-lg font-semibold"
           >
             Generate Interview
-          </button>
-        </div>
-      </div>
+          </Button>
+        </CardContent>
+      </Card>
     </main>
   );
 }
