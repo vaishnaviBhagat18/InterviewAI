@@ -23,7 +23,42 @@ import {
 export default function Home() {
   const [career, setCareer] = useState("");
   const [interviewType, setInterviewType] = useState("");
+  const [question, setQuestion] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  const generateQuestion = async () => {
+    console.log("Generating question...");
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "/api/generate-question",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            career,
+            interviewType,
+          }),
+        }
+      );
+
+      console.log("Response:", response);
+
+      const data = await response.json();
+
+      console.log("Data:", data);
+
+      setQuestion(data.question);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 p-6">
       <Card className="w-full max-w-3xl shadow-2xl border-0">
@@ -45,8 +80,11 @@ export default function Home() {
 
             <select
               value={career}
-              onChange={(e) => setCareer(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                console.log("Career:", e.target.value);
+                setCareer(e.target.value);
+              }}
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3"
             >
               <option value="">Select Career</option>
               <option value="fullstack">Full Stack Developer</option>
@@ -65,8 +103,11 @@ export default function Home() {
 
             <select
               value={interviewType}
-              onChange={(e) => setInterviewType(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                console.log("Type:", e.target.value);
+                setInterviewType(e.target.value);
+              }}
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3"
             >
               <option value="">Select Type</option>
               <option value="technical">Technical</option>
@@ -79,9 +120,29 @@ export default function Home() {
           <Button
             size="lg"
             className="w-full text-lg font-semibold"
+            onClick={generateQuestion}
+            disabled={
+              !career ||
+              !interviewType ||
+              loading
+            }
           >
-            Generate Interview
+            {loading
+              ? "Generating..."
+              : "Generate Interview"}
           </Button>
+          <p>Career: {career}</p>
+          <p>Type: {interviewType}</p>
+
+          {question && (
+            <div className="rounded-xl border bg-slate-50 p-4">
+              <h3 className="mb-2 font-semibold">
+                Interview Question
+              </h3>
+
+              <p>{question}</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </main>
