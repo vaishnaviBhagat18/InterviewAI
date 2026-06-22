@@ -6,25 +6,46 @@ export async function POST(req: Request) {
     const {
       career,
       interviewType,
+      experienceLevel,
       history,
     } = await req.json();
 
     const prompt = `
-You are an interviewer.
+You are conducting a mock interview.
 
-Career: ${career}
-Interview Type: ${interviewType}
+Role:
+${career}
 
-Interview History:
-${JSON.stringify(history, null, 2)}
+Interview Type:
+${interviewType}
 
-Generate the NEXT interview question.
+Experience Level:
+${experienceLevel}
+
+Previous Interview History:
+${JSON.stringify(history)}
 
 Rules:
-- Ask a follow-up question related to previous discussion.
-- Increase difficulty gradually.
-- Candidate is a fresher.
-- Return only the question.
+
+For Fresher:
+- Keep questions short.
+- Focus on fundamentals.
+- Avoid advanced architecture topics.
+
+If previous Knowledge Score:
+
+0-4:
+Ask an easier foundational question.
+
+5-7:
+Ask a similar difficulty question.
+
+8-10:
+Ask a slightly deeper follow-up.
+
+Question length must be under 25 words.
+
+Return ONLY the next question.
 `;
 
     const completion =

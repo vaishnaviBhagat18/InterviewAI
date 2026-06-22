@@ -41,6 +41,11 @@ export default function Home() {
     }[]
   >([]);
 
+  const [experienceLevel, setExperienceLevel] =
+  useState("Fresher");
+
+  
+
   const generateQuestion = async () => {
     console.log("Generating question...");
 
@@ -57,6 +62,7 @@ export default function Home() {
           body: JSON.stringify({
             career,
             interviewType,
+            experienceLevel,
           }),
         }
       );
@@ -89,6 +95,7 @@ export default function Home() {
           body: JSON.stringify({
             question,
             answer,
+            experienceLevel,
           }),
         }
       );
@@ -175,12 +182,12 @@ export default function Home() {
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3"
             >
               <option value="">Select Career</option>
-              <option value="fullstack">Full Stack Developer</option>
-              <option value="frontend">Frontend Developer</option>
-              <option value="backend">Backend Developer</option>
-              <option value="aiml">AI/ML Engineer</option>
-              <option value="dataanalyst">Data Analyst</option>
-              <option value="cybersecurity">Cybersecurity</option>
+              <option value="Full Stack Developer">Full Stack Developer</option>
+              <option value="Frontend Developer">Frontend Developer</option>
+              <option value="Backend Developer">Backend Developer</option>
+              <option value="AI/ML Engineer">AI/ML Engineer</option>
+              <option value="Data Analyst">Data Analyst</option>
+              <option value="Cybersecurity">Cybersecurity</option>
             </select>
           </div>
 
@@ -202,6 +209,28 @@ export default function Home() {
               <option value="hr">HR</option>
               <option value="behavioral">Behavioral</option>
               <option value="mixed">Mixed</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block font-medium">
+              Experience Level
+            </label>
+
+            <select
+              value={experienceLevel}
+              onChange={(e) =>
+                setExperienceLevel(e.target.value)
+              }
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm"
+            >
+              <option value="Fresher">Fresher</option>
+              <option value="Intermediate">
+                Intermediate
+              </option>
+              <option value="Experienced">
+                Experienced
+              </option>
             </select>
           </div>
 

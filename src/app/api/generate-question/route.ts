@@ -6,17 +6,40 @@ export async function POST(req: Request) {
      console.log("KEY EXISTS:", !!process.env.GROQ_API_KEY);
      
   try {
-    const { career, interviewType } = await req.json();
+    const {
+      career,
+      interviewType,
+      experienceLevel,
+    } = await req.json();
 
     const prompt = `
-Generate ONE interview question.
+You are an interviewer conducting a mock interview.
 
-Career Field: ${career}
-Interview Type: ${interviewType}
+Candidate Role:
+${career}
 
-Candidate Level: Fresher
+Interview Type:
+${interviewType}
 
-Return ONLY the question.
+Experience Level:
+${experienceLevel}
+
+Rules:
+
+If Fresher:
+- Ask beginner placement-level questions.
+- Focus on fundamentals.
+- Keep question under 25 words.
+
+If Intermediate:
+- Ask moderate practical questions.
+
+If Experienced:
+- Ask advanced real-world questions.
+
+Generate ONLY ONE question.
+
+Return only the question text.
 `;
 
     const completion =

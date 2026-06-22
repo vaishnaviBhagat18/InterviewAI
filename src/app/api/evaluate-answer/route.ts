@@ -3,11 +3,17 @@ import { groq } from "@/lib/groq";
 
 export async function POST(req: Request) {
   try {
-    const { question, answer } =
-      await req.json();
+      const {
+          question,
+          answer,
+          experienceLevel,
+      } = await req.json();
 
-    const prompt = `
-You are an expert technical interviewer.
+      const prompt = `
+You are evaluating an interview answer.
+
+Experience Level:
+${experienceLevel}
 
 Question:
 ${question}
@@ -15,9 +21,13 @@ ${question}
 Candidate Answer:
 ${answer}
 
-Evaluate the answer honestly.
+Instructions:
 
-Return in this exact format:
+- Be realistic.
+- Be concise.
+- Do not write essays.
+
+Return exactly:
 
 Knowledge Score: X/10
 
@@ -25,17 +35,18 @@ Clarity Score: X/10
 
 Confidence Score: X/10
 
-Strengths:
-- point 1
-- point 2
+Strength:
+One sentence.
 
-Areas to Improve:
-- point 1
-- point 2
+Improvement:
+One sentence.
 
 Ideal Answer:
-Provide a concise but interview-ready answer that would score 10/10.
+Maximum 4 lines for Fresher.
+Maximum 6 lines for Intermediate.
+Maximum 8 lines for Experienced.
 `;
+
     const completion =
       await groq.chat.completions.create({
         model: "llama-3.3-70b-versatile",
