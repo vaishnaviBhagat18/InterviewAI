@@ -1,3 +1,65 @@
+# InterviewAI
+
+InterviewAI is an AI-powered interview preparation platform designed to help students and freshers practice interviews and improve their confidence before placements.
+
+## Features
+
+* AI-generated interview questions
+* General Interview Mode
+* Resume-Based Interview Mode
+* Adaptive difficulty levels
+* Multi-round interview sessions
+* AI-powered answer evaluation
+* Knowledge, Clarity, and Confidence scoring
+* Ideal answer generation
+* Company-specific interview preparation
+
+## Technology Stack
+
+### Frontend
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+* shadcn/ui
+
+### AI
+
+* Groq API (Llama 3.3 70B)
+
+### Deployment
+
+* GitHub
+* Vercel (Optional)
+
+## How It Works
+
+1. User selects interview settings.
+2. AI generates interview questions.
+3. User submits answers.
+4. AI evaluates responses.
+5. Feedback and ideal answers are provided.
+6. Resume-based mode generates personalized interview questions.
+
+## Future Scope
+
+* PDF Resume Parsing
+* Voice-Based Interviews
+* Progress Tracking Dashboard
+* Company-Specific Interview Tracks
+* Mobile Application
+
+## SDG Alignment
+
+This project supports:
+
+**SDG 4 – Quality Education**
+
+by providing accessible and personalized interview preparation for students and job seekers.
+
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
