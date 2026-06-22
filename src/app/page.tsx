@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 import {
   Card,
@@ -12,19 +13,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 
 export default function Home() {
   const [career, setCareer] = useState("");
   const [interviewType, setInterviewType] = useState("");
+
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [answer, setAnswer] = useState("");
+  const [evaluation, setEvaluation] = useState("");
+  
 
   const generateQuestion = async () => {
     console.log("Generating question...");
@@ -59,6 +65,35 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  const evaluateAnswer = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "/api/evaluate-answer",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            question,
+            answer,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      setEvaluation(data.evaluation);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 p-6">
       <Card className="w-full max-w-3xl shadow-2xl border-0">
@@ -141,6 +176,37 @@ export default function Home() {
               </h3>
 
               <p>{question}</p>
+            </div>
+          )}
+
+          {question && (
+            <div className="space-y-4">
+              <Textarea
+                placeholder="Type your answer here..."
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                rows={8}
+              />
+
+              <Button
+                size="lg"
+                className="w-full text-lg font-semibold"
+                onClick={evaluateAnswer}
+                disabled={!answer}
+              >
+                Evaluate Answer
+              </Button>
+            </div>
+          )}
+          {evaluation && (
+            <div className="rounded-xl border bg-green-50 p-4">
+              <h3 className="font-semibold mb-2">
+                AI Feedback
+              </h3>
+
+              <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                {evaluation}
+              </div>            
             </div>
           )}
         </CardContent>
