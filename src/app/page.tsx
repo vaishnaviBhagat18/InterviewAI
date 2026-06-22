@@ -30,7 +30,16 @@ export default function Home() {
 
   const [answer, setAnswer] = useState("");
   const [evaluation, setEvaluation] = useState("");
-  
+
+  const [questionNumber, setQuestionNumber] = useState(1);
+
+  const [interviewHistory, setInterviewHistory] = useState<
+    {
+      question: string;
+      answer: string;
+      evaluation: string;
+    }[]
+  >([]);
 
   const generateQuestion = async () => {
     console.log("Generating question...");
@@ -87,6 +96,50 @@ export default function Home() {
       const data = await response.json();
 
       setEvaluation(data.evaluation);
+
+      setInterviewHistory((prev) => [
+        ...prev,
+        {
+          question,
+          answer,
+          evaluation: data.evaluation,
+        },
+      ]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getNextQuestion = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "/api/next-question",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            career,
+            interviewType,
+            history: interviewHistory,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      setQuestion(data.question);
+
+      setAnswer("");
+
+      setEvaluation("");
+
+      setQuestionNumber((prev) => prev + 1);
     } catch (error) {
       console.error(error);
     } finally {
@@ -171,10 +224,9 @@ export default function Home() {
 
           {question && (
             <div className="rounded-xl border bg-slate-50 p-4">
-              <h3 className="mb-2 font-semibold">
-                Interview Question
+              <h3 className="font-semibold mb-2">
+                Question {questionNumber} / 5
               </h3>
-
               <p>{question}</p>
             </div>
           )}
@@ -207,6 +259,25 @@ export default function Home() {
               <div className="whitespace-pre-wrap text-sm leading-relaxed">
                 {evaluation}
               </div>            
+            </div>
+          )}
+          {evaluation && questionNumber < 5 && (
+            <Button
+              className="w-full"
+              onClick={getNextQuestion}
+            >
+              Next Question
+            </Button>
+          )}
+          {questionNumber >= 5 && evaluation && (
+            <div className="rounded-xl border bg-blue-50 p-4">
+              <h3 className="font-bold">
+                Interview Complete 🎉
+              </h3>
+
+              <p>
+                You completed all 5 interview rounds.
+              </p>
             </div>
           )}
         </CardContent>
