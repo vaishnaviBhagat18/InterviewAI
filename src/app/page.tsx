@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 import {
   Card,
@@ -22,7 +23,7 @@ import {
 // } from "@/components/ui/select";
 
 export default function Home() {
-  const [career, setCareer] = useState("");
+  // const [career, setCareer] = useState("");
   const [interviewType, setInterviewType] = useState("");
 
   const [question, setQuestion] = useState("");
@@ -42,9 +43,16 @@ export default function Home() {
   >([]);
 
   const [experienceLevel, setExperienceLevel] =
-  useState("Fresher");
+    useState("Fresher");
 
-  
+  const [interviewMode, setInterviewMode] = useState("general");
+
+  const [targetRole, setTargetRole] = useState("");
+
+  const [organization, setOrganization] = useState("");
+
+  const [resumeText, setResumeText] = useState("");
+  const [resumeName, setResumeName] = useState("");
 
   const generateQuestion = async () => {
     console.log("Generating question...");
@@ -60,9 +68,13 @@ export default function Home() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            career,
+            // career,
             interviewType,
             experienceLevel,
+            targetRole,
+            organization,
+            interviewMode,
+            resumeText,
           }),
         }
       );
@@ -131,7 +143,7 @@ export default function Home() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            career,
+            // career,
             interviewType,
             history: interviewHistory,
           }),
@@ -154,6 +166,38 @@ export default function Home() {
     }
   };
 
+  const uploadResume = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    setResumeName(file.name);
+
+    const formData = new FormData();
+
+    formData.append("resume", file);
+
+    try {
+      const response = await fetch(
+        "/api/upload-resume",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      setResumeText(data.text);
+
+      console.log(data.text);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 p-6">
       <Card className="w-full max-w-3xl shadow-2xl border-0">
@@ -167,8 +211,50 @@ export default function Home() {
           </CardDescription>
         </CardHeader>
 
+        <div>
+          <label className="mb-2 block font-medium">
+            Choose Interview Mode
+          </label>
+
+          <div className="grid grid-cols-2 gap-4">
+
+            <div
+              onClick={() => setInterviewMode("general")}
+              className={`cursor-pointer rounded-xl border p-5 transition-all ${interviewMode === "general"
+                ? "border-blue-500 bg-blue-50"
+                : "border-slate-300 bg-white"
+                }`}
+            >
+              <h3 className="font-semibold text-lg">
+                🎯 General Interview
+              </h3>
+
+              <p className="text-sm text-slate-600">
+                Practice placement and interview fundamentals.
+              </p>
+            </div>
+
+            <div
+              onClick={() => setInterviewMode("resume")}
+              className={`cursor-pointer rounded-xl border p-5 transition-all ${interviewMode === "resume"
+                ? "border-blue-500 bg-blue-50"
+                : "border-slate-300 bg-white"
+                }`}
+            >
+              <h3 className="font-semibold text-lg">
+                📄 Resume-Based Interview
+              </h3>
+
+              <p className="text-sm text-slate-600">
+                Personalized questions based on your resume.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
         <CardContent className="space-y-6">
-          <div>
+          {/* <div>
             <label className="mb-2 block font-medium">
               Career Field
             </label>
@@ -189,7 +275,31 @@ export default function Home() {
               <option value="Data Analyst">Data Analyst</option>
               <option value="Cybersecurity">Cybersecurity</option>
             </select>
+          </div> */}
+
+          <div>
+            <label className="mb-2 block font-medium">
+              Role Applying For
+            </label>
+
+            <select
+              value={targetRole}
+              onChange={(e) => {
+                console.log("Role:", e.target.value);
+                setTargetRole(e.target.value);
+              }}
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3"
+            >
+              <option value="">Select Role</option>
+              <option value="Full Stack Developer">Full Stack Developer</option>
+              <option value="Frontend Developer">Frontend Developer</option>
+              <option value="Backend Developer">Backend Developer</option>
+              <option value="AI/ML Engineer">AI/ML Engineer</option>
+              <option value="Data Analyst">Data Analyst</option>
+              <option value="Cybersecurity">Cybersecurity</option>
+            </select>
           </div>
+
 
           <div>
             <label className="mb-2 block font-medium">
@@ -234,12 +344,63 @@ export default function Home() {
             </select>
           </div>
 
+          <div>
+            <label className="mb-2 block font-medium">
+              Organization Applying To (Optional)
+            </label>
+
+            <Input
+              placeholder="Google"
+              value={organization}
+              onChange={(e) =>
+                setOrganization(e.target.value)
+              }
+            />
+          </div>
+
+          {interviewMode === "resume" && (
+            <div className="rounded-xl border bg-slate-50 p-4">
+              <p className="font-medium">
+                Upload Resume
+              </p>
+
+              {/* <input
+                type="file"
+                accept=".pdf"
+                onChange={uploadResume}
+              /> */}
+
+              <textarea
+                value={resumeText}
+                onChange={(e) => setResumeText(e.target.value)}
+                placeholder="Paste your resume content here..."
+                className="w-full min-h-[200px] rounded-xl border p-3"
+              />
+
+              <p className="mt-2 text-sm text-slate-500">
+                {/* InterviewAI will generate personalized
+                questions based on your projects,
+                skills and experience. */}
+
+                Paste your resume content and InterviewAI
+                will generate personalized questions
+                based on your projects, skills and experience.
+
+              </p>
+
+              {resumeName && (
+                <div className="mt-3 rounded-lg bg-green-50 p-3 text-sm">
+                  Resume Loaded: {resumeName}
+                </div>
+              )}
+            </div>
+          )}
           <Button
             size="lg"
             className="w-full text-lg font-semibold"
             onClick={generateQuestion}
             disabled={
-              !career ||
+              !targetRole ||
               !interviewType ||
               loading
             }
@@ -248,8 +409,8 @@ export default function Home() {
               ? "Generating..."
               : "Generate Interview"}
           </Button>
-          <p>Career: {career}</p>
-          <p>Type: {interviewType}</p>
+          {/* <p>Target Role: {targetRole}</p>
+          <p>Type: {interviewType}</p> */}
 
           {question && (
             <div className="rounded-xl border bg-slate-50 p-4">
@@ -287,7 +448,7 @@ export default function Home() {
 
               <div className="whitespace-pre-wrap text-sm leading-relaxed">
                 {evaluation}
-              </div>            
+              </div>
             </div>
           )}
           {evaluation && questionNumber < 5 && (

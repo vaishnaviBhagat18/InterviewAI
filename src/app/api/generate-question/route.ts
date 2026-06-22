@@ -7,22 +7,35 @@ export async function POST(req: Request) {
      
   try {
     const {
-      career,
+      // career,
       interviewType,
       experienceLevel,
+      targetRole,
+      organization,
+      interviewMode,
+      resumeText,
     } = await req.json();
 
     const prompt = `
 You are an interviewer conducting a mock interview.
 
 Candidate Role:
-${career}
+${targetRole}
 
 Interview Type:
 ${interviewType}
 
 Experience Level:
 ${experienceLevel}
+
+Organization:
+${organization || "Not Specified"}
+
+Interview Mode:
+${interviewMode}
+
+Resume Content:
+${resumeText}
 
 Rules:
 
@@ -36,6 +49,16 @@ If Intermediate:
 
 If Experienced:
 - Ask advanced real-world questions.
+
+If Organization is specified:
+- Make questions relevant to the organization's expectations.
+
+If Interview Mode is "resume":
+
+- Ask questions based on projects.
+- Ask questions based on skills.
+- Ask questions based on technologies mentioned.
+- Prefer project-based questions over generic questions.
 
 Generate ONLY ONE question.
 

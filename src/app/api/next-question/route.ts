@@ -4,7 +4,8 @@ import { groq } from "@/lib/groq";
 export async function POST(req: Request) {
   try {
     const {
-      career,
+    //   career,
+      targetRole,
       interviewType,
       experienceLevel,
       history,
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
 You are conducting a mock interview.
 
 Role:
-${career}
+${targetRole}
 
 Interview Type:
 ${interviewType}
