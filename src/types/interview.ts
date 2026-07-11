@@ -11,3 +11,12 @@ export type InterviewType =
   | "hr"
   | "behavioral"
   | "mixed";
+
+export interface Feedback {
+  evaluation: string;
+  idealAnswer: string;
+}
+
+export interface QuestionResponse {
+  question: string;
+}
