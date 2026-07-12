@@ -1,3 +1,5 @@
+import { Input } from "@/components/ui/input";
+
 interface InterviewSettingsProps {
   interviewMode: string;
 
@@ -10,8 +12,8 @@ interface InterviewSettingsProps {
   targetRole: string;
   setTargetRole: (value: string) => void;
 
-  organization: string;
-  setOrganization: (value: string) => void;
+  targetCompany: string;
+  setTargetCompany: (value: string) => void;
 }
 
 export default function InterviewSettings({
@@ -22,8 +24,8 @@ export default function InterviewSettings({
   setExperienceLevel,
   targetRole,
   setTargetRole,
-  organization,
-  setOrganization,
+  targetCompany,
+  setTargetCompany,
 }: InterviewSettingsProps) {
   return (
     <>
@@ -49,7 +51,7 @@ export default function InterviewSettings({
         </select>
       </div>
 
-      {/* Experience */}
+      {/* Experience Level */}
 
       <div>
         <label className="mb-2 block font-medium">
@@ -63,6 +65,7 @@ export default function InterviewSettings({
           }
           className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3"
         >
+          <option value="">Select Level</option>
           <option value="fresher">Fresher</option>
           <option value="intermediate">
             Intermediate
@@ -73,147 +76,41 @@ export default function InterviewSettings({
         </select>
       </div>
 
-      {/* Only General Mode */}
+      {/* Target Role - Only for Quick Practice */}
 
       {interviewMode === "general" && (
         <div>
           <label className="mb-2 block font-medium">
-            Role Applying For
+            Target Role
           </label>
 
-          <input
+          <Input
             value={targetRole}
             onChange={(e) =>
               setTargetRole(e.target.value)
             }
-            placeholder="Software Engineer"
-            className="w-full rounded-xl border border-slate-300 px-4 py-3"
+            placeholder="e.g. Software Engineer"
+            // className="w-full rounded-xl border border-slate-300 px-4 py-3"
           />
         </div>
       )}
 
-      {/* Company */}
+      {/* Target Company */}
 
       <div>
         <label className="mb-2 block font-medium">
-          Organization Applying To (Optional)
+          Target Company (Optional)
         </label>
 
-        <input
-          value={organization}
+        <Input
+          value={targetCompany}
           onChange={(e) =>
-            setOrganization(e.target.value)
+            setTargetCompany(e.target.value)
           }
-          placeholder="Google, Microsoft..."
-          className="w-full rounded-xl border border-slate-300 px-4 py-3"
+          placeholder="e.g. Google"
+          // className="w-full rounded-xl border border-slate-300 px-4 py-3"
         />
       </div>
     </>
   );
 }
-
-
-        // <CardContent className="space-y-6">
-        //   {/* <div>
-        //     <label className="mb-2 block font-medium">
-        //       Career Field
-        //     </label>
-
-        //     <select
-        //       value={career}
-        //       onChange={(e) => {
-        //         console.log("Career:", e.target.value);
-        //         setCareer(e.target.value);
-        //       }}
-        //       className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3"
-        //     >
-        //       <option value="">Select Career</option>
-        //       <option value="Full Stack Developer">Full Stack Developer</option>
-        //       <option value="Frontend Developer">Frontend Developer</option>
-        //       <option value="Backend Developer">Backend Developer</option>
-        //       <option value="AI/ML Engineer">AI/ML Engineer</option>
-        //       <option value="Data Analyst">Data Analyst</option>
-        //       <option value="Cybersecurity">Cybersecurity</option>
-        //     </select>
-        //   </div> */}
-
-        //   <div>
-        //     <label className="mb-2 block font-medium">
-        //       Role Applying For
-        //     </label>
-
-        //     <select
-        //       value={targetRole}
-        //       onChange={(e) => {
-        //         console.log("Role:", e.target.value);
-        //         setTargetRole(e.target.value);
-        //       }}
-        //       className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3"
-        //     >
-        //       <option value="">Select Role</option>
-        //       <option value="Full Stack Developer">Full Stack Developer</option>
-        //       <option value="Frontend Developer">Frontend Developer</option>
-        //       <option value="Backend Developer">Backend Developer</option>
-        //       <option value="AI/ML Engineer">AI/ML Engineer</option>
-        //       <option value="Data Analyst">Data Analyst</option>
-        //       <option value="Cybersecurity">Cybersecurity</option>
-        //     </select>
-        //   </div>
-
-
-        //   <div>
-        //     <label className="mb-2 block font-medium">
-        //       Interview Type
-        //     </label>
-
-        //     <select
-        //       value={interviewType}
-        //       onChange={(e) => {
-        //         console.log("Type:", e.target.value);
-        //         setInterviewType(e.target.value);
-        //       }}
-        //       className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3"
-        //     >
-        //       <option value="">Select Type</option>
-        //       <option value="technical">Technical</option>
-        //       <option value="hr">HR</option>
-        //       <option value="behavioral">Behavioral</option>
-        //       <option value="mixed">Mixed</option>
-        //     </select>
-        //   </div>
-
-        //   <div>
-        //     <label className="mb-2 block font-medium">
-        //       Experience Level
-        //     </label>
-
-        //     <select
-        //       value={experienceLevel}
-        //       onChange={(e) =>
-        //         setExperienceLevel(e.target.value)
-        //       }
-        //       className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm"
-        //     >
-        //       <option value="Fresher">Fresher</option>
-        //       <option value="Intermediate">
-        //         Intermediate
-        //       </option>
-        //       <option value="Experienced">
-        //         Experienced
-        //       </option>
-        //     </select>
-        //   </div>
-
-        //   <div>
-        //     <label className="mb-2 block font-medium">
-        //       Organization Applying To (Optional)
-        //     </label>
-
-        //     <Input
-        //       placeholder="Google"
-        //       value={organization}
-        //       onChange={(e) =>
-        //         setOrganization(e.target.value)
-        //       }
-        //     />
-        //   </div>

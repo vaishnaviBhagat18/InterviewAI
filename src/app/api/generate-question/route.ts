@@ -11,16 +11,21 @@ export async function POST(req: Request) {
       interviewType,
       experienceLevel,
       targetRole,
-      organization,
+      targetCompany,
       interviewMode,
       resumeText,
     } = await req.json();
 
-    const prompt = `
-You are an interviewer conducting a mock interview.
 
-Candidate Role:
-${targetRole}
+const prompt = `
+You are an experienced technical interviewer conducting a realistic mock interview.
+
+Your goal is to help the candidate prepare for real placement interviews by asking clear, relevant, and professional questions.
+
+Candidate Information
+
+Target Role:
+${targetRole || "Not Specified"}
 
 Interview Type:
 ${interviewType}
@@ -28,41 +33,87 @@ ${interviewType}
 Experience Level:
 ${experienceLevel}
 
-Organization:
-${organization || "Not Specified"}
+Target Company:
+${targetCompany || "Not Specified"}
 
 Interview Mode:
 ${interviewMode}
 
 Resume Content:
-${resumeText}
+${resumeText || "Not Provided"}
 
-Rules:
+==========================
+Interview Rules
+==========================
 
-If Fresher:
+General Rules
+
+- Ask ONLY ONE question.
+- Return ONLY the question text.
+- Do not include numbering, greetings, explanations or markdown.
+- Keep the question conversational, like a real interviewer.
+- Maximum 25 words for Freshers.
+- Maximum 35 words for Intermediate and Experienced candidates.
+- Never combine multiple questions into one.
+- Never ask follow-up questions before the candidate answers.
+
+Experience Level
+
+If Experience Level is Fresher:
 - Ask beginner placement-level questions.
-- Focus on fundamentals.
-- Keep question under 25 words.
+- Focus on fundamentals and core concepts.
+- Avoid system design and highly advanced topics.
+- Questions should be answerable within 2-3 minutes.
 
-If Intermediate:
-- Ask moderate practical questions.
+If Experience Level is Intermediate:
+- Ask practical implementation questions.
+- Include project-based thinking where appropriate.
+- Moderate difficulty.
 
-If Experienced:
-- Ask advanced real-world questions.
+If Experience Level is Experienced:
+- Ask advanced real-world scenarios.
+- Include architecture, optimization or design decisions where appropriate.
 
-If Organization is specified:
-- Make questions relevant to the organization's expectations.
+Interview Type
+
+Technical:
+- Ask technical knowledge and implementation questions.
+
+HR:
+- Ask personality, communication and career-related questions.
+
+Behavioral:
+- Ask situation-based questions using previous experiences.
+
+Mixed:
+- Alternate naturally between technical and HR style questions.
+
+Target Company
+
+If a Target Company is provided:
+- Adjust the style and difficulty to match the company's interview expectations.
+- Do not ask company-specific trivia.
+
+Resume Mode
 
 If Interview Mode is "resume":
 
-- Ask questions based on projects.
-- Ask questions based on skills.
-- Ask questions based on technologies mentioned.
-- Prefer project-based questions over generic questions.
+- Prioritize projects mentioned in the resume.
+- Then ask about skills.
+- Then technologies.
+- Finally ask about achievements or responsibilities.
+- Ask naturally, not by reading bullet points.
+- Never invent information that does not exist in the resume.
 
-Generate ONLY ONE question.
+Question Quality
 
-Return only the question text.
+A good question should:
+- Test one concept only.
+- Be realistic.
+- Be concise.
+- Encourage explanation rather than one-word answers.
+
+Generate the best possible interview question.
 `;
 
     const completion =
@@ -99,50 +150,3 @@ Return only the question text.
 }
 
 
-// import { NextResponse } from "next/server";
-// import { openai } from "@/lib/openai";
-
-// export async function POST(req: Request) {
-//   try {
-//     const { career, interviewType } = await req.json();
-
-//     const prompt = `
-// Generate ONE interview question.
-
-// Career Field: ${career}
-// Interview Type: ${interviewType}
-
-// The question should be suitable for a fresher.
-
-// Return only the question.
-// `;
-
-//     const response = await openai.chat.completions.create({
-//       model: "gpt-4o-mini",
-//       messages: [
-//         {
-//           role: "user",
-//           content: prompt,
-//         },
-//       ],
-//     });
-
-//     const question =
-//       response.choices[0].message.content;
-
-//     return NextResponse.json({
-//       question,
-//     });
-//   } catch (error) {
-//     console.error(error);
-
-//     return NextResponse.json(
-//       {
-//         error: "Failed to generate question",
-//       },
-//       {
-//         status: 500,
-//       }
-//     );
-//   }
-// }

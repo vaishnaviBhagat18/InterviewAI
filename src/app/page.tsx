@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -11,22 +18,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-
-
 import InterviewModeToggle from "@/components/InterviewModeToggle";
 import InterviewSettings from "@/components/InterviewSettings";
 import ResumeUpload from "@/components/ResumeUpload";
 import QuestionCard from "@/components/QuestionCard";
 
+
 export default function Home() {
-  // const [career, setCareer] = useState("");
   const [interviewType, setInterviewType] = useState("");
 
   const [question, setQuestion] = useState("");
@@ -52,7 +50,7 @@ export default function Home() {
 
   const [targetRole, setTargetRole] = useState("");
 
-  const [organization, setOrganization] = useState("");
+  const [targetCompany, setTargetCompany] = useState("");
 
   const [resumeText, setResumeText] = useState("");
   const [resumeName, setResumeName] = useState("");
@@ -71,11 +69,10 @@ export default function Home() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            // career,
             interviewType,
             experienceLevel,
             targetRole,
-            organization,
+            targetCompany,
             interviewMode,
             resumeText,
           }),
@@ -203,9 +200,12 @@ export default function Home() {
 
   const canGenerate =
     interviewMode === "general"
-      ? targetRole && interviewType
-      : resumeText && interviewType;
-
+      ? interviewType &&
+      experienceLevel &&
+      targetRole.trim()
+      : interviewType &&
+      experienceLevel &&
+      resumeText.trim();
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 p-6">
@@ -233,8 +233,8 @@ export default function Home() {
             setExperienceLevel={setExperienceLevel}
             targetRole={targetRole}
             setTargetRole={setTargetRole}
-            organization={organization}
-            setOrganization={setOrganization}
+            targetCompany={targetCompany}
+            setTargetCompany={setTargetCompany}
           />
 
           {interviewMode === "resume" && (
@@ -248,14 +248,11 @@ export default function Home() {
             size="lg"
             className="w-full text-lg font-semibold"
             onClick={generateQuestion}
-            // disabled={!canGenerate || loading}
-            disabled={!interviewType || loading}
+            disabled={!canGenerate || loading}
           >
-            {loading
-              ? "Generating..."
-              : "Generate Interview"}
+            {loading ? "Generating..." : "Start Interview"}
           </Button>
-
+          
           <QuestionCard
             question={question}
             questionNumber={questionNumber}
