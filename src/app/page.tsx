@@ -22,7 +22,7 @@ import InterviewModeToggle from "@/components/InterviewModeToggle";
 import InterviewSettings from "@/components/InterviewSettings";
 import ResumeUpload from "@/components/ResumeUpload";
 import QuestionCard from "@/components/QuestionCard";
-
+import InterviewTimeline from "@/components/InterviewTimeline";
 
 export default function Home() {
   const [interviewType, setInterviewType] = useState("");
@@ -252,7 +252,7 @@ export default function Home() {
           >
             {loading ? "Generating..." : "Start Interview"}
           </Button>
-          
+
           <QuestionCard
             question={question}
             questionNumber={questionNumber}
@@ -262,6 +262,10 @@ export default function Home() {
             onEvaluate={evaluateAnswer}
             onNextQuestion={getNextQuestion}
             loading={loading}
+          />
+
+          <InterviewTimeline
+            history={interviewHistory}
           />
 
         </CardContent>
